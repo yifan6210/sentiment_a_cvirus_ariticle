@@ -1,0 +1,336 @@
+---
+title: "main"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(rvest)
+library(tidytext)
+library(tidyverse)
+```
+
+#change to a rate 
+
+#https://bradleyboehmke.github.io/2015/12/scraping-html-text.html for scraping 
+
+#China 
+```{r, 1/10, first know death}
+url <- "https://www.nytimes.com/2020/01/10/world/asia/china-virus-wuhan-death.html"
+page <- read_html(url)
+
+text <- page %>%
+  html_nodes("p") %>%
+  html_text()
+text
+
+cleaned_text<- text[5:22] 
+cleaned_text
+
+text_df <- tibble(line = 1:length(cleaned_text), text = cleaned_text)
+tidy_df <- text_df %>%
+  unnest_tokens(word, text)%>%
+  anti_join(stop_words)
+
+senti_1 <- tidy_df %>%
+  inner_join(get_sentiments("bing"))%>%
+  count(word, sentiment, sort = TRUE) %>%
+  group_by(sentiment)%>%
+  summarise(n = sum(n))%>%
+  mutate(ratio = n/sum(n))
+senti_1$Date <- "01/10"
+senti_1$total_c <- nrow(tidy_df)
+```
+
+```{r, 1/22, wuhan lockdown}
+url <- "https://www.nytimes.com/2020/01/22/world/asia/china-coronavirus-travel.html"
+page <- read_html(url)
+
+text <- page %>%
+  html_nodes("p") %>%
+  html_text()
+text
+
+cleaned_text<- text[5:41] 
+cleaned_text
+
+text_df <- tibble(line = 1:length(cleaned_text), text = cleaned_text)
+tidy_df <- text_df %>%
+  unnest_tokens(word, text)%>%
+  anti_join(stop_words)
+
+senti_2 <- tidy_df %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  group_by(sentiment)%>%
+  summarise(n = sum(n))%>%
+  mutate(ratio = n/sum(n))
+senti_2$Date <- "01/22"
+senti_2$total_c <- nrow(tidy_df)
+```
+
+
+```{r, 1/30, who declare global emergency, wuhan virus}
+url <- "https://www.nytimes.com/2020/01/30/health/coronavirus-world-health-organization.html"
+page <- read_html(url)
+
+text <- page %>%
+  html_nodes("p") %>%
+  html_text()
+
+cleaned_text<- text[5:49] 
+
+text_df <- tibble(line = 1:length(cleaned_text), text = cleaned_text)
+tidy_df <- text_df %>%
+  unnest_tokens(word, text)%>%
+  anti_join(stop_words)
+
+senti_3 <- tidy_df %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  group_by(sentiment)%>%
+  summarise(n = sum(n))%>%
+  mutate(ratio = n/sum(n))
+
+senti_3$Date <- "01/30"
+senti_3$total_c <- nrow(tidy_df)
+```
+
+```{r, 2/6 death of LiwenLiang}
+
+url <- "https://www.nytimes.com/2020/02/06/world/asia/chinese-doctor-Li-Wenliang-coronavirus.html"
+
+page <- read_html(url)
+
+text <- page %>%
+  html_nodes("p") %>%
+  html_text()
+text
+
+cleaned_text<- text[5:33] 
+
+text_df <- tibble(line = 1:length(cleaned_text), text = cleaned_text)
+tidy_df <- text_df %>%
+  unnest_tokens(word, text)%>%
+  anti_join(stop_words)
+
+senti_10 <- tidy_df %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  group_by(sentiment)%>%
+  summarise(n = sum(n))%>%
+  mutate(ratio = n/sum(n))
+
+senti_10$Date <- "02/06"
+senti_10$total_c <- nrow(tidy_df)
+```
+
+```{r, 3/18 no local infections}
+url <- "https://www.nytimes.com/2020/03/18/world/asia/china-coronavirus-zero-infections.html"
+page <- read_html(url)
+
+text <- page %>%
+  html_nodes("p") %>%
+  html_text()
+text
+
+cleaned_text<- text[5:46] 
+cleaned_text
+
+text_df <- tibble(line = 1:length(cleaned_text), text = cleaned_text)
+tidy_df <- text_df %>%
+  unnest_tokens(word, text)%>%
+  anti_join(stop_words)
+
+senti_4 <- tidy_df %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  group_by(sentiment)%>%
+  summarise(n = sum(n))%>%
+  mutate(ratio = n/sum(n))
+
+senti_4$Date <- "03/18"
+senti_4$total_c <- nrow(tidy_df)
+```
+
+# U.S
+
+```{r, 1/21, first case in washington state }
+url <- "https://www.nytimes.com/2020/01/21/health/cdc-coronavirus.html"
+page <- read_html(url)
+
+text <- page %>%
+  html_nodes("p") %>%
+  html_text()
+text
+
+cleaned_text<- text[5:37] 
+cleaned_text
+
+text_df <- tibble(line = 1:length(cleaned_text), text = cleaned_text)
+tidy_df <- text_df %>%
+  unnest_tokens(word, text)%>%
+  anti_join(stop_words)
+
+senti_5 <- tidy_df %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  group_by(sentiment)%>%
+  summarise(n = sum(n))%>%
+  mutate(ratio = n/sum(n))
+
+senti_5$Date <- "01/21"
+senti_5$total_c <- nrow(tidy_df)
+```
+
+```{r, 2/29, first death in seattle}
+url <- "https://www.nytimes.com/2020/02/29/world/coronavirus-news.html#link-3f8f1f4b"
+page <- read_html(url)
+
+text <- page %>%
+  html_nodes("p") %>%
+  html_text()
+
+cleaned_text<- text[14:21] 
+cleaned_text
+
+text_df <- tibble(line = 1:length(cleaned_text), text = cleaned_text)
+tidy_df <- text_df %>%
+  unnest_tokens(word, text)%>%
+  anti_join(stop_words)
+
+senti_6 <- tidy_df %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  group_by(sentiment)%>%
+  summarise(n = sum(n))%>%
+  mutate(ratio = n/sum(n))
+
+senti_6$Date <- "02/29"
+senti_6$total_c <- nrow(tidy_df)
+```
+
+```{r, 3/13 national emergency}
+url <- "https://www.nytimes.com/2020/03/13/world/coronavirus-news-live-updates.html#link-37509802"
+page <- read_html(url)
+
+text <- page %>%
+  html_nodes("p") %>%
+  html_text()
+text
+
+cleaned_text<- text[18:27] 
+cleaned_text
+
+text_df <- tibble(line = 1:length(cleaned_text), text = cleaned_text)
+tidy_df <- text_df %>%
+  unnest_tokens(word, text)%>%
+  anti_join(stop_words)
+
+senti_7 <- tidy_df %>%
+   inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+   group_by(sentiment)%>%
+   summarise(n = sum(n))%>%
+   mutate(ratio = n/sum(n))
+
+senti_7$Date <- "03/13"
+senti_7$total_c <- nrow(tidy_df)
+```
+
+```{r, 3/26 U.S lead in confirmed cases}
+url <- "https://www.nytimes.com/2020/03/26/health/usa-coronavirus-cases.html"
+page <- read_html(url)
+
+text <- page %>%
+  html_nodes("p") %>%
+  html_text()
+text
+
+cleaned_text<- text[5:36] 
+cleaned_text
+
+text_df <- tibble(line = 1:length(cleaned_text), text = cleaned_text)
+tidy_df <- text_df %>%
+  unnest_tokens(word, text)%>%
+  anti_join(stop_words)
+
+senti_8 <- tidy_df %>%
+  inner_join(get_sentiments("bing"))%>%
+  count(word, sentiment, sort = TRUE) %>%
+  group_by(sentiment)%>%
+  summarise(n = sum(n))%>%
+  mutate(ratio = n/sum(n))
+
+senti_8$Date <- "03/26"
+senti_8$total_c <- nrow(tidy_df)
+```
+
+```{r, 4/1, stay at home, compare to wuhan lockdown}
+url <- "https://www.nytimes.com/interactive/2020/us/coronavirus-stay-at-home-order.html"
+page <- read_html(url)
+
+text <- page %>%
+  html_nodes("p") %>%
+  html_text()
+text
+
+cleaned_text<- text[4:406] 
+cleaned_text
+
+text_df <- tibble(line = 1:length(cleaned_text), text = cleaned_text)
+tidy_df <- text_df %>%
+  unnest_tokens(word, text)%>%
+  anti_join(stop_words)
+
+senti_9 <- tidy_df %>%
+  inner_join(get_sentiments("bing")) %>%
+  filter(word!="effective") %>% #effective is a biased word in this article 
+  count(word, sentiment, sort = TRUE) %>%
+  group_by(sentiment)%>%
+  summarise(n = sum(n))%>%
+  mutate(ratio = n/sum(n))
+
+senti_9$Date <- "04/01"
+senti_9$total_c <- nrow(tidy_df)
+
+```
+
+```{r}
+senti_ch <- rbind(senti_1,senti_2,senti_3,senti_4, senti_10) 
+senti_ch$country <- "China" 
+
+senti_us <- rbind(senti_5,senti_6,senti_7,senti_8,senti_9) 
+senti_us$country <-"U.S"
+
+senti_total <- rbind(senti_ch, senti_us)%>%
+  filter(sentiment == "negative")
+senti_total$country <- as.factor(senti_total$country)
+senti_total <- senti_total %>%
+  mutate(percent = ratio * 100)
+```
+
+# visuals 
+# mirrored histogram https://www.r-graph-gallery.com/density_mirror_ggplot2.html
+```{r}
+plot <- ggplot(senti_total, aes(x = Date, y = percent, group = country, color = country))+
+  geom_point(aes(size = total_c), show.legend = FALSE)+
+  geom_smooth(method = "lm", se = FALSE, size = 0.5,linetype = "dashed")+
+  ylab( "Percentage Negativity")+
+  scale_color_brewer(palette = "Set2")+
+  theme_minimal()
+
+plot+
+  labs(title = "Comparison of between",
+       caption = "Size of the dot indicate the length of the article")+
+  annotate("label", x = 3, y = 72.5, label = "Wuhan Lockdown", size =3)+
+  annotate("label", x = 9.8, y = 77, label = "Stay at Home", size =3)+
+  annotate("label", x = 1.7, y = 89, label = "First Death in China", size =3)+
+  annotate("label", x = 6, y = 59, label = "First Death in U.S", size =3)
+  
+# dates need to be changed proportionally
+#title of the graph
+```
+
+

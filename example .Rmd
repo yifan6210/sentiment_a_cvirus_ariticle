@@ -1,0 +1,45 @@
+---
+title: "example"
+output: html_document
+---
+
+# https://medium.com/@actsusanli/text-mining-is-fun-with-r-35e537b12002
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(tm.plugin.webmining)
+library(purrr)
+library(tidytext)
+library(gutenbergr)
+library(ggplot2)
+
+#UTF-8 encoded texts 
+dickens <- gutenberg_download(c(98, 1400, 46, 730, 786)) # five novels 
+```
+
+```{r}
+tidy_dickens <- dickens %>%
+  unnest_tokens(word, text) %>% # tokenized sentences under the column name text 
+  anti_join(stop_words) # got rid of the stop words
+```
+
+# Sentiment analysis 
+
+```{r}
+bing_word_counts <- tidy_dickens %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  ungroup()
+bing_word_counts
+```
+
+#  Can create negative positive word count with dates
+
+```{r, most connected words}
+dickens_bigrams <- dickens %>%
+  unnest_tokens(bigram, text, token = "ngrams", n = 2)
+dickens_bigrams
+```
+
+
+
